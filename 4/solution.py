@@ -1,5 +1,6 @@
 from vm import *
 import re
+import sys
 
 def is_mirrored(n):
     s = []
@@ -72,6 +73,29 @@ def get_next_mirrored_prime(idx, last_prime=None, last_idx=None):
 
     return prime
 
+def solve_section(stack, reg1, reg2, start_prime_idx):
+    # Get next prime
+    last_prime = None
+    last_idx = start_prime_idx - 1
+    while stack[-1] != 0:
+        reg1 = stack.pop()
+        stack.append(reg2)
+        stack.append(reg1)
+
+        p = get_next_mirrored_prime(last_idx + 1, last_prime, last_idx)
+        # print(p)
+        last_prime = p
+        last_idx += 1
+        stack.append(p)
+
+        result = stack.pop() ^ stack.pop()
+        sys.stdout.write(chr(result))
+        sys.stdout.flush()
+
+        reg2 = stack.pop() + 1
+
+    return stack
+
 
 def main():
     # Get file and replace known symbols
@@ -83,24 +107,20 @@ def main():
     # Split instructions into sections
     s = s.split('\n\n')
 
+    stack = []
     for section in s:
         # Only look at sections that are loading values onto the stack
         if section.startswith("load"):
-            print(section)
-            res = re.findall(r"[0-9]+", section)
-
-            # The starting stack
-            stack = res[:-1]
-
-            print(res)
-            print()
-
-    last_prime = None
-    last_idx = None
-    for i in range(1, 11):
-        p = get_next_mirrored_prime(i, last_prime, last_idx)
-        last_prime = p
-        last_idx = i
-        print(p)
+            res = [int(n) for n in re.findall(r"[0-9]+", section)]
+            stack = stack + res[:-1]
+            stack = solve_section(stack, 0, res[-1], res[-1])
+    # prime_count = 0
+    # i = 1
+    # while prime_count < 900:
+    #     if is_mirrored(i):
+    #         if is_prime(i):
+    #             prime_count += 1
+    #             print(i, prime_count, flush=True)
+    #     i += 1
 
 main()
