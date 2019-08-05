@@ -52,15 +52,16 @@ def move(curr_lat, curr_lon, curr_token, dlat, dlon):
 
     s = str(parsed)
     closer = False
+
+    p = parsed.find("p", text=re.compile(r"You are getting closer"))
+    referer = url + query
     if "fast" in s:
         print("Too fast")
         print(parsed)
-    elif "closer" in s:
-        p = parsed.find("p", text=re.compile(r"You are getting closer"))
-        referer = url + query
+    elif "closer" in s or "you should move" in s:
         closer = True
     elif "away" in s:
-        print(parsed)
+        closer = False
     else:
         print(parsed)
         exit(1)
@@ -79,6 +80,7 @@ while True:
         backtrack = False
         (lat, lon, token, is_closer) = move(lat, lon, token, -speed_lat, -speed_lon)
     elif turn:
+        turn = False
         tmp = speed_lat
         speed_lat = speed_lon
         speed_lon = tmp
@@ -90,7 +92,11 @@ while True:
         print("%s, %s : Getting closer" % (lat, lon))
     else:
         print("%s, %s : Too far, turning around" % (lat, lon))
-        turn = True
+
+        if speed_lat == 0:
+            # Turn and move alone latitude
+            turn = True
+
         backtrack = True
 
     # Seems like the google backend needs some time to load the token. If I
