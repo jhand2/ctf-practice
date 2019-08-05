@@ -10,7 +10,9 @@ lon = 0.0982
 referer = url
 user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.87 Safari/537.36"
 
-speed = 0.00005
+# Guess and check to get optimal values
+speed_lat = 0
+speed_lon = -0.0001
 
 def get(url, query, headers):
     full = url + query
@@ -26,9 +28,11 @@ def get_initial_token():
 def move(curr_lat, curr_lon, curr_token, dlat, dlon):
     global referer
 
-    new_lat = curr_lat + dlat
-    new_lon = curr_lon + dlon
+    new_lat = round(curr_lat + dlat, 4)
+    new_lon = round(curr_lon + dlon, 4)
 
+    # I thought setting the headers was important but I don't think it really
+    # is. Oh well.
     headers = {
         "Referer": referer,
         "User-Agent": user_agent,
@@ -42,28 +46,53 @@ def move(curr_lat, curr_lon, curr_token, dlat, dlon):
     query ="?lat=%s&lon=%s&token=%s" % (new_lat, new_lon, curr_token)
     res = get(url, query, headers)
 
-
+    # Parse out state information
     parsed = BeautifulSoup(res.text, "html.parser")
     new_token = parsed.find('input', {"name": "token"}).get("value")
 
+    closer = False
     if parsed.find("p", text=re.compile(r"this is too fast!")):
         print("Too fast")
         print(parsed)
-        return None
     elif parsed.find("p", text=re.compile(r"You are getting closer")):
         p = parsed.find("p", text=re.compile(r"You are getting closer"))
-        print(p)
         referer = url + query
-        return (new_lat, new_lon, new_token)
+        closer = True
+    elif parsed.find("p", text=re.compile(r"away")):
+        print(parsed)
+    else:
+        print(parsed)
+        exit(1)
+
+    return (new_lat, new_lon, new_token, closer)
+
 
 token = get_initial_token()
-time.sleep(0.4)
-for i in range(100):
-    new_pos = move(lat, lon, token, -speed, -speed)
-    time.sleep(0.4)
-    if new_pos is not None:
-        lat = new_pos[0]
-        lon = new_pos[1]
-        token = new_pos[2]
+time.sleep(0.5)
 
+backtrack = False
+flip_speed = False
+turn = False
+while True:
+    if backtrack:
+        backtrack = False
+        (lat, lon, token, is_closer) = move(lat, lon, token, -speed_lat, -speed_lon)
+    elif turn:
+        tmp = speed_lat
+        speed_lat = speed_lon
+        speed_lon = tmp
+        (lat, lon, token, is_closer) = move(lat, lon, token, speed_lat, speed_lon)
+    else:
+        (lat, lon, token, is_closer) = move(lat, lon, token, speed_lat, speed_lon)
+
+    if is_closer:
+        print("%s, %s : Getting closer" % (lat, lon))
+    else:
+        print("%s, %s : Too far, turning around" % (lat, lon))
+        turn = True
+        backtrack = True
+
+    # Seems like the google backend needs some time to load the token. If I
+    # remove this wait, it says "too fast"
+    time.sleep(0.35)
 
