@@ -51,14 +51,14 @@ def move(curr_lat, curr_lon, curr_token, dlat, dlon):
     new_token = parsed.find('input', {"name": "token"}).get("value")
 
     closer = False
-    if parsed.find("p", text=re.compile(r"this is too fast!")):
+    if "fast" in parsed:
         print("Too fast")
         print(parsed)
-    elif parsed.find("p", text=re.compile(r"You are getting closer")):
+    elif "closer" in parsed:
         p = parsed.find("p", text=re.compile(r"You are getting closer"))
         referer = url + query
         closer = True
-    elif parsed.find("p", text=re.compile(r"away")):
+    elif "away" in parsed:
         print(parsed)
     else:
         print(parsed)
