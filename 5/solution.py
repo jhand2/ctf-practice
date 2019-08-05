@@ -50,15 +50,16 @@ def move(curr_lat, curr_lon, curr_token, dlat, dlon):
     parsed = BeautifulSoup(res.text, "html.parser")
     new_token = parsed.find('input', {"name": "token"}).get("value")
 
+    s = str(parsed)
     closer = False
-    if "fast" in parsed:
+    if "fast" in s:
         print("Too fast")
         print(parsed)
-    elif "closer" in parsed:
+    elif "closer" in s:
         p = parsed.find("p", text=re.compile(r"You are getting closer"))
         referer = url + query
         closer = True
-    elif "away" in parsed:
+    elif "away" in s:
         print(parsed)
     else:
         print(parsed)
