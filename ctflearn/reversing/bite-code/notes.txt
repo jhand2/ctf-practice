@@ -1,0 +1,45 @@
+scratch_notes: These notes are to track the stack & locals state as we go through
+the instructions in bitecode.txt
+-------------
+
+== After 1 ==
+n
+3
+=============
+
+== After 2 ==
+n << 3
+=============
+
+== After 3 ==
+_
+=============
+
+== After 5 ==
+n
+525024598
+=============
+
+== After 7 ==
+525024598 ^ n
+=============
+
+== After 8 ==
+_
+=============
+
+== After 10 ==
+n << 3
+525024598 ^ n
+==============
+
+== After 12 ==
+(n << 3) ^ (525024598 ^ n)
+-889275714
+==============
+
+
+
+== Locals After instruction 12 ==
+locals = [n, n << 3, 525024598 ^ n]
+
