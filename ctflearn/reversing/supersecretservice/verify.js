@@ -3,6 +3,7 @@
 msg = ["You fail!", "Seriously?", "Ha! Ha! You wish it was right!", "Correct! (jkjk its wrong lol)", "stap tryin! youll nvr git it right!", "<code>throw 'you tried'; //throwing something you can catch!</code>", "just give up!", "y0u n00b! R U just bru13 f0rc1ng?"]
 tries = 0;
 
+// Tweaked this function to make it runnable on node
 function check() {
     try {
         //$ = document.getElementById.bind(document);
@@ -53,94 +54,104 @@ var _0xda23 = [
     "\x6D\x73\x67"
 ];
 
+// Pull out this code to aid in readability
+//Randomizer taken from https://stackoverflow.com/a/19301306/7344257 code
+var m_w = 123456789;
+var m_z = 987654321;
+var mask = 0xffffffff;
+
+// Takes any integer
+function seed(i) {
+    m_w = i;
+}
+
+function random() {
+    m_z = (36969 * (m_z & 65535) + (m_z >> 16)) & mask;
+    m_w = (18000 * (m_w & 65535) + (m_w >> 16)) & mask;
+    var result = ((m_z << 16) + m_w) & mask;
+    return result
+}
+
+//Ignore this code... This is the magical part of this verifier
+
+function hash(_0x7a95x2) {
+    var _0x7a95x3 = 0xffffffff;
+    // ================================================
+    // This looks like a reversible hash function to me
+    // ================================================
+    // Array.prototype.reduce.call(param1, function(a, b) {
+    //  return (a * 31 + b.charCodeAt(0) & 0xFFFFFFFF)
+    // })
+    return Array[_0xda23[3]][_0xda23[2]][_0xda23[1]](_0x7a95x2, function(a, b) {
+        return (a * 31 + b[_0xda23[0]](0)) & _0x7a95x3
+    }, 0)
+}
+
+// probably just xor
+function xor(_0x7a95x7, _0x7a95x8) {
+    var z = _0xda23[4];
+    for (var i = 0; i < _0x7a95x7[_0xda23[5]]; i++) {
+        z += String[_0xda23[6]](_0x7a95x7[_0xda23[0]](i) ^ _0x7a95x8)
+    };
+    return z
+}
+
+// probably just xor2
+function xor2(_0x7a95x7, _0x7a95x8) {
+    var z = _0xda23[4];
+    for (var i = 0; i < _0x7a95x7[_0xda23[5]]; i++) {
+        z += String[_0xda23[6]](_0x7a95x7[_0xda23[0]](i) ^ (_0x7a95x8[_0xda23[0]](i % _0x7a95x8[_0xda23[5]]) & 15))
+    };
+    return z
+}
+
+// Seems like a function to decode a message given an encoded message, key, and signature
+// decode(message, key, sig)
+function decode(_0x7a95xd, _0x7a95xe, _0x7a95xf) {
+    // x = param3 % 2
+    // y = param2.charCodeAt(param3 - x) / 2
+    x = _0x7a95xf % 2;
+    y = _0x7a95xe[_0xda23[0]]((_0x7a95xf - x) / 2);
+    if (!x) {
+        y >>= 4
+    };
+    y &= 0xf;
+
+    // return xor(param1, y)
+    return xor(_0x7a95xd, y)
+}
+
+function runcode(_0x7a95x11, _0x7a95xd, _0x7a95xe) {
+    // decode(param2, param3, 0);
+    _0x7a95xd = decode(_0x7a95xd, _0x7a95xe, 0);
+    try {
+        var _0x7a95x12 = {
+            x: _0x7a95xd,
+            d: decode,
+            k: _0x7a95xe,
+            o: xor2,
+            s: _0x7a95x11
+        };
+        var _0x7a95xf = 0;
+        for (var i = 0; i < _0x7a95xe[_0xda23[5]] * 2; i++) {
+            new Function(_0xda23[7], _0x7a95x12[_0xda23[8]])(_0x7a95x12)
+        };
+        return _0x7a95x12[_0xda23[7]]
+    } catch (e) {
+        throw _0xda23[9]
+    }
+}
+
 function check2() {
-    //Randomizer taken from https://stackoverflow.com/a/19301306/7344257 code
-    var m_w = 123456789;
-    var m_z = 987654321;
-    var mask = 0xffffffff;
-
-    // Takes any integer
-    function seed(i) {
-        m_w = i;
-    }
-
-    function random() {
-        m_z = (36969 * (m_z & 65535) + (m_z >> 16)) & mask;
-        m_w = (18000 * (m_w & 65535) + (m_w >> 16)) & mask;
-        var result = ((m_z << 16) + m_w) & mask;
-        return result
-    }
-
-    //Ignore this code... This is the magical part of this verifier
-
-    function hash(_0x7a95x2) {
-        var _0x7a95x3 = 0xffffffff;
-        // ================================================
-        // This looks like a reversible hash function to me
-        // ================================================
-        // Array.prototype.reduce.call(param1, function(a, b) {
-        //  return (a * 31 + b.charCodeAt(0) & 0xFFFFFFFF)
-        // })
-        return Array[_0xda23[3]][_0xda23[2]][_0xda23[1]](_0x7a95x2, function(a, b) {
-            return (a * 31 + b[_0xda23[0]](0)) & _0x7a95x3
-        }, 0)
-    }
-
-    // probably just xor
-    function xor(_0x7a95x7, _0x7a95x8) {
-        var z = _0xda23[4];
-        for (var i = 0; i < _0x7a95x7[_0xda23[5]]; i++) {
-            z += String[_0xda23[6]](_0x7a95x7[_0xda23[0]](i) ^ _0x7a95x8)
-        };
-        return z
-    }
-
-    // probably just xor2
-    function xor2(_0x7a95x7, _0x7a95x8) {
-        var z = _0xda23[4];
-        for (var i = 0; i < _0x7a95x7[_0xda23[5]]; i++) {
-            z += String[_0xda23[6]](_0x7a95x7[_0xda23[0]](i) ^ (_0x7a95x8[_0xda23[0]](i % _0x7a95x8[_0xda23[5]]) & 15))
-        };
-        return z
-    }
-
-    function decode(_0x7a95xd, _0x7a95xe, _0x7a95xf) {
-        x = _0x7a95xf % 2;
-        y = _0x7a95xe[_0xda23[0]]((_0x7a95xf - x) / 2);
-        if (!x) {
-            y >>= 4
-        };
-        y &= 0xf;
-        return xor(_0x7a95xd, y)
-    }
-
-    function runcode(_0x7a95x11, _0x7a95xd, _0x7a95xe) {
-        _0x7a95xd = decode(_0x7a95xd, _0x7a95xe, 0);
-        try {
-            var _0x7a95x12 = {
-                x: _0x7a95xd,
-                d: decode,
-                k: _0x7a95xe,
-                o: xor2,
-                s: _0x7a95x11
-            };
-            var _0x7a95xf = 0;
-            for (var i = 0; i < _0x7a95xe[_0xda23[5]] * 2; i++) {
-                new Function(_0xda23[7], _0x7a95x12[_0xda23[8]])(_0x7a95x12)
-            };
-            return _0x7a95x12[_0xda23[7]]
-        } catch (e) {
-            throw _0xda23[9]
-        }
-    }
-
-    seed(18458);
+    seed(18458); // This looks vulnerable AF
     j++;
     input = $(_0xda23[11])[_0xda23[10]];
     var a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z;
     a = 1;
     TRUE = (j == j);
     FALSE = !TRUE;
+
+    //
     b = Math[_0xda23[12]](++a, a + ++a + TRUE) - FALSE + TRUE;
     c = Math[_0xda23[12]](a++ - FALSE, a += FALSE + FALSE) - FALSE;
     d = (random() + random()) & b;
@@ -167,7 +178,9 @@ function check2() {
     } catch (e) {
         throw _0xda23[9]
     };
-    seed(97632000);
+
+    seed(97632000); // Also bad
+
     e = Math[_0xda23[21]](b / (FALSE - TRUE + FALSE));
     c = (random() >> (e - TRUE + FALSE)) & b;
     d = (random() >> (e - TRUE + FALSE)) & b;
@@ -179,7 +192,10 @@ function check2() {
     }
 }
 
+// Export some functions to play around with them
 module.exports = {
     check: check,
-    op_table: _0xda23
+    op_table: _0xda23,
+    hash: hash,
+    decode: decode
 }
