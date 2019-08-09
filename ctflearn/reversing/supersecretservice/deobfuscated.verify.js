@@ -76,25 +76,25 @@ function random() {
 
 function hash(_0x7a95x2) {
     var _0x7a95x3 = 0xffffffff;
-    return Array[_0xda23[3]][_0xda23[2]][_0xda23[1]](_0x7a95x2, function(a, b) {
-        return (a * 31 + b[_0xda23[0]](0)) & _0x7a95x3
+    return Array.prototype.reduce.call(_0x7a95x2, function(a, b) {
+        return (a * 31 + b.charCodeAt(0)) & _0x7a95x3
     }, 0)
 }
 
 // xor each character with param2, and make a resultant string
 function xor(_0x7a95x7, _0x7a95x8) {
-    var z = _0xda23[4];
-    for (var i = 0; i < _0x7a95x7[_0xda23[5]]; i++) {
-        z += String[_0xda23[6]](_0x7a95x7[_0xda23[0]](i) ^ _0x7a95x8)
+    var z = "";
+    for (var i = 0; i < _0x7a95x7.length; i++) {
+        z += String.fromCharCode(_0x7a95x7.charCodeAt(i) ^ _0x7a95x8)
     };
     return z
 }
 
 // probably just xor2
 function xor2(_0x7a95x7, _0x7a95x8) {
-    var z = _0xda23[4];
-    for (var i = 0; i < _0x7a95x7[_0xda23[5]]; i++) {
-        z += String[_0xda23[6]](_0x7a95x7[_0xda23[0]](i) ^ (_0x7a95x8[_0xda23[0]](i % _0x7a95x8[_0xda23[5]]) & 15))
+    var z = "";
+    for (var i = 0; i < _0x7a95x7.length; i++) {
+        z += String.fromCharCode(_0x7a95x7.charCodeAt(i) ^ (_0x7a95x8.charCodeAt(i % _0x7a95x8.length) & 15))
     };
     return z
 }
@@ -105,7 +105,7 @@ function decode(_0x7a95xd, _0x7a95xe, _0x7a95xf) {
     // x = param3 % 2
     // y = param2.charCodeAt(param3 - x) / 2
     x = _0x7a95xf % 2;
-    y = _0x7a95xe[_0xda23[0]]((_0x7a95xf - x) / 2);
+    y = _0x7a95xe.charCodeAt((_0x7a95xf - x) / 2);
     if (!x) {
         y >>= 4
     };
@@ -130,18 +130,18 @@ function runcode(_0x7a95x11, _0x7a95xd, _0x7a95xe) {
         var _0x7a95xf = 0;
 
         // for (var i = 0; i < param3.length * 2; i++)
-        for (var i = 0; i < _0x7a95xe[_0xda23[5]] * 2; i++) {
+        for (var i = 0; i < _0x7a95xe.length * 2; i++) {
             // wtf
             // new Function(s, params.x)(params)
-            new Function(_0xda23[7], _0x7a95x12[_0xda23[8]])(_0x7a95x12)
+            new Function("s", _0x7a95x12.x)(_0x7a95x12)
         };
 
         // return params.s
-        return _0x7a95x12[_0xda23[7]]
+        return _0x7a95x12.s
     } catch (e) {
         // ...ok?
         // throw bad
-        throw _0xda23[9]
+        throw "bad"
     }
 }
 
@@ -154,50 +154,50 @@ function check2(message, password, sig) {
     TRUE = (j == j);
     FALSE = !TRUE;
 
-    b = Math[_0xda23[12]](++a, a + ++a + TRUE) - FALSE + TRUE;
-    c = Math[_0xda23[12]](a++ - FALSE, a += FALSE + FALSE) - FALSE;
+    b = Math.pow(++a, a + ++a + TRUE) - FALSE + TRUE;
+    c = Math.pow(a++ - FALSE, a += FALSE + FALSE) - FALSE;
     d = (random() + random()) & b;
 
     // input must start with flag{ and endwith }. Its hash value must be -1996285287, and it's length must be 36
-    if (!input[_0xda23[14]](_0xda23[13]) || input[_0xda23[15]](-FALSE) != _0xda23[16] /*|| hash(input) != -1996285287*/ || input[_0xda23[5]] != (random() & c)) {
-        throw _0xda23[9]
+    if (!input.startsWith("flag{") || input.substr(-FALSE) != "}" /*|| hash(input) != -1996285287*/ || input.length != (random() & c)) {
+        throw "bad"
     };
     f = random() & b - d;
-    input = input[_0xda23[15]](a)[_0xda23[17]](_0xda23[16])[+TRUE];
+    input = input.substr(a).split("}")[+TRUE];
     // Must be all alphanumeric or underscores
-    if (!/^[A-Za-z0-9_]+$/ [_0xda23[18]](input)) {
-        throw _0xda23[9]
+    if (!/^[A-Za-z0-9_]+$/ .test(input)) {
+        throw "bad"
     };
     f *= f;
-    input = input[_0xda23[17]](_0xda23[19]);
+    input = input.split("_");
     // Must be 4 words, second word must has length of 3, second word must hasve second character R
-    if (input[_0xda23[5]] != f || input[+FALSE][_0xda23[5]] != f - FALSE - TRUE || input[+FALSE][+FALSE] != 'R') {
-        throw _0xda23[9]
+    if (input.length != f || input[+FALSE].length != f - FALSE - TRUE || input[+FALSE][+FALSE] != 'R') {
+        throw "bad"
     };
     try {
         // First word is a number
         seed(parseInt(input[TRUE + TRUE]));
         // g = ~random() ^ hash(input[2]) ^ hash(input[3])
         g = ~random() ^ hash(input[FALSE + FALSE]) ^ hash(input[f - FALSE + TRUE]);
-        console[_0xda23[20]](g);
+        console.log(g);
         if (g != 1865600952) {
-            throw _0xda23[9]
+            throw "bad"
         }
     } catch (e) {
-        throw _0xda23[9]
+        throw "bad"
     }; 
     seed(97632000);
 
-    e = Math[_0xda23[21]](b / (FALSE - TRUE + FALSE));
+    e = Math.floor(b / (FALSE - TRUE + FALSE));
     c = (random() >> (e - TRUE + FALSE)) & b;
     d = (random() >> (e - TRUE + FALSE)) & b;
-    if (input[FALSE + FALSE - TRUE][_0xda23[5]] != c - d) {
-        throw _0xda23[9]
+    if (input[FALSE + FALSE - TRUE].length != c - d) {
+        throw "bad"
     };
     // c - d == 2
     // d == 9, which doesn't really make sense. This must be wrong
     if (input[d] != runcode(sig, xor(message, c - d), input[FALSE + FALSE])) {
-        throw _0xda23[9]
+        throw "bad"
     }
 }
 
