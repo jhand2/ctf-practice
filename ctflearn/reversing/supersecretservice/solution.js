@@ -27,16 +27,6 @@ deobfuscate("verify.js")
 
 // Ok, now to own the algo.
 
-// a2 = a * 31 + b
-// -b = 31a
-//
-function reverse_hash(h, out_len) {
-    var out = "";
-    for (var i = 0; i < out_len; i++) {
-        
-    }
-}
-
 // Get message length
 verify.seed(18458);
 var a = 1;
@@ -56,19 +46,19 @@ var nwords = verify.random() & b - d;
 nwords *= nwords; // 4
 
 verify.seed(97632000);
-var e = Math.floor(b / (FALSE - TRUE + FALSE));
-c = (verify.random() >> (e - TRUE + FALSE)) & b; // 11
-d = (verify.random() >> (e - TRUE + FALSE)) & b; // 9
+console.log(verify.random())
+//var e = Math.floor(b / (FALSE - TRUE + FALSE));
+//c = (verify.random() >> (e - TRUE + FALSE)) & b; // 11
+//d = (verify.random() >> (e - TRUE + FALSE)) & b; // 9
+//console.log(b);
+//console.log(e);
+//console.log(c);
+//console.log(d);
 
 // length of 3rd word is 2
 var lw3 = c - d;
 
-
 var message = fs.readFileSync("code.dat", 'utf-8');
 var sig = "g6Gj<bQ\w";
 verify.check(message, code, sig);
-
-var test = "test";
-var h = verify.hash(test);
-console.log(h);
 

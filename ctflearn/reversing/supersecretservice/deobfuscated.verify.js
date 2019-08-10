@@ -66,6 +66,7 @@ function seed(i) {
 }
 
 function random() {
+    console.log(m_w);
     m_z = (36969 * (m_z & 65535) + (m_z >> 16)) & mask;
     m_w = (18000 * (m_w & 65535) + (m_w >> 16)) & mask;
     var result = ((m_z << 16) + m_w) & mask;
@@ -174,23 +175,30 @@ function check2(message, password, sig) {
     if (input.length != f || input[+FALSE].length != f - FALSE - TRUE || input[+FALSE][+FALSE] != 'R') {
         throw "bad"
     };
-    try {
-        // First word is a number
-        seed(parseInt(input[TRUE + TRUE]));
-        // g = ~random() ^ hash(input[2]) ^ hash(input[3])
-        g = ~random() ^ hash(input[FALSE + FALSE]) ^ hash(input[f - FALSE + TRUE]);
-        console.log(g);
-        if (g != 1865600952) {
-            throw "bad"
-        }
-    } catch (e) {
-        throw "bad"
-    }; 
+    //try {
+        //// First word is a number
+        //seed(parseInt(input[TRUE + TRUE]));
+        //// g = ~random() ^ hash(input[2]) ^ hash(input[3])
+        //g = ~random() ^ hash(input[FALSE + FALSE]) ^ hash(input[f - FALSE + TRUE]);
+        //console.log(g);
+        //if (g != 1865600952) {
+            //throw "bad"
+        //}
+    //} catch (e) {
+        //throw "bad"
+    //}; 
     seed(97632000);
+    console.log()
+    console.log(m_w);
+    console.log(random())
 
     e = Math.floor(b / (FALSE - TRUE + FALSE));
     c = (random() >> (e - TRUE + FALSE)) & b;
     d = (random() >> (e - TRUE + FALSE)) & b;
+    console.log(b);
+    console.log(e);
+    console.log(c);
+    console.log(d);
     if (input[FALSE + FALSE - TRUE].length != c - d) {
         throw "bad"
     };

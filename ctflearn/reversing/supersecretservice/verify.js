@@ -56,9 +56,22 @@ var _0xda23 = [
 
 // Pull out this code to aid in readability
 //Randomizer taken from https://stackoverflow.com/a/19301306/7344257 code
-var m_w = 123456789;
-var m_z = 987654321;
-var mask = 0xffffffff;
+
+// Export some functions to play around with them
+module.exports = {
+    check: check,
+    _0xda23: _0xda23,
+    hash: hash,
+    decode: decode,
+    seed: seed,
+    random: random,
+    check: check,
+    check2: check2,
+
+    m_w: 123456789,
+    m_z: 987654321,
+    mask: 0xffffffff
+}
 
 // Takes any integer
 function seed(i) {
@@ -66,6 +79,7 @@ function seed(i) {
 }
 
 function random() {
+    console.log(m_w);
     m_z = (36969 * (m_z & 65535) + (m_z >> 16)) & mask;
     m_w = (18000 * (m_w & 65535) + (m_w >> 16)) & mask;
     var result = ((m_z << 16) + m_w) & mask;
@@ -174,23 +188,30 @@ function check2(message, password, sig) {
     if (input[_0xda23[5]] != f || input[+FALSE][_0xda23[5]] != f - FALSE - TRUE || input[+FALSE][+FALSE] != 'R') {
         throw _0xda23[9]
     };
-    try {
-        // First word is a number
-        seed(parseInt(input[TRUE + TRUE]));
-        // g = ~random() ^ hash(input[2]) ^ hash(input[3])
-        g = ~random() ^ hash(input[FALSE + FALSE]) ^ hash(input[f - FALSE + TRUE]);
-        console[_0xda23[20]](g);
-        if (g != 1865600952) {
-            throw _0xda23[9]
-        }
-    } catch (e) {
-        throw _0xda23[9]
-    }; 
+    //try {
+        //// First word is a number
+        //seed(parseInt(input[TRUE + TRUE]));
+        //// g = ~random() ^ hash(input[2]) ^ hash(input[3])
+        //g = ~random() ^ hash(input[FALSE + FALSE]) ^ hash(input[f - FALSE + TRUE]);
+        //console[_0xda23[20]](g);
+        //if (g != 1865600952) {
+            //throw _0xda23[9]
+        //}
+    //} catch (e) {
+        //throw _0xda23[9]
+    //}; 
     seed(97632000);
+    console.log()
+    console.log(m_w);
+    console.log(random())
 
     e = Math[_0xda23[21]](b / (FALSE - TRUE + FALSE));
     c = (random() >> (e - TRUE + FALSE)) & b;
     d = (random() >> (e - TRUE + FALSE)) & b;
+    console.log(b);
+    console.log(e);
+    console.log(c);
+    console.log(d);
     if (input[FALSE + FALSE - TRUE][_0xda23[5]] != c - d) {
         throw _0xda23[9]
     };
@@ -199,17 +220,5 @@ function check2(message, password, sig) {
     if (input[d] != runcode(sig, xor(message, c - d), input[FALSE + FALSE])) {
         throw _0xda23[9]
     }
-}
-
-// Export some functions to play around with them
-module.exports = {
-    check: check,
-    _0xda23: _0xda23,
-    hash: hash,
-    decode: decode,
-    seed: seed,
-    random: random,
-    check: check,
-    check2: check2
 }
 
