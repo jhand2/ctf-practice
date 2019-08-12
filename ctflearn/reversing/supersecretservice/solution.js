@@ -28,36 +28,41 @@ deobfuscate("verify.js")
 // Ok, now to own the algo.
 
 // Get message length
-verify.seed(18458);
-var a = 1;
-var TRUE = (1 == 2);
-var FALSE = !TRUE;
+var b = 31;
+var c = 14;
+var d = 3;
+var e = 15;
 
-b = Math.pow(++a, a + ++a + TRUE) - FALSE + TRUE;
-c = Math.pow(a++ - FALSE, a += FALSE + FALSE) - FALSE;
-d = (verify.random() + verify.random()) & b;
-
-var len = verify.random() & c;
-
-var code = "flag{" + "0_0R0_000_aaaaaaaaaaaaaaaaaaaa" + "}"
+var code = "flag{" + "0_0R0_00000000000_aaaaaaaaaaaa" + "}"
 
 // nwords == f
-var nwords = verify.random() & b - d;
-nwords *= nwords; // 4
+var nwords = 4;
 
-verify.seed(97632000);
-console.log(verify.random())
-//var e = Math.floor(b / (FALSE - TRUE + FALSE));
-//c = (verify.random() >> (e - TRUE + FALSE)) & b; // 11
-//d = (verify.random() >> (e - TRUE + FALSE)) & b; // 9
-//console.log(b);
-//console.log(e);
-//console.log(c);
-//console.log(d);
 
-// length of 3rd word is 2
+// length of 3rd word is 11
 var lw3 = c - d;
 
+// Solve for number that makes up first word of the flag
+// that means solve for m_w1
+
+//var result_actual = 1865600952;
+//var mask = 0xffffffff;
+//var m_z0 = 1991189455;
+//var m_z1 = (36969 * (m_z0 & 65535) + (m_z0 >> 16)) & mask;
+//// solve for m_w0
+//for (var i = 0; i < 1000; i++) {
+    //var m_w1 = (18000 * (i & 65535) + (i >> 16)) & mask;
+
+    //var rand = ((m_z1 << 16) + m_w1) & mask;
+    //var g = 
+
+    //if (result == result_actual) {
+        //console.log("FOUND! m_w0 = " + i);
+        //break;
+    //}
+//}
+
+console.log();
 var message = fs.readFileSync("code.dat", 'utf-8');
 var sig = "g6Gj<bQ\w";
 verify.check(message, code, sig);

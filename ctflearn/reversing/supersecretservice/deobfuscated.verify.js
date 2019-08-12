@@ -56,6 +56,17 @@ var _0xda23 = [
 
 // Pull out this code to aid in readability
 //Randomizer taken from https://stackoverflow.com/a/19301306/7344257 code
+
+// Export some functions to play around with them
+module.exports = {
+    check: check,
+    _0xda23: _0xda23,
+    hash: hash,
+    decode: decode,
+    check: check,
+    check2: check2,
+}
+
 var m_w = 123456789;
 var m_z = 987654321;
 var mask = 0xffffffff;
@@ -66,7 +77,6 @@ function seed(i) {
 }
 
 function random() {
-    console.log(m_w);
     m_z = (36969 * (m_z & 65535) + (m_z >> 16)) & mask;
     m_w = (18000 * (m_w & 65535) + (m_w >> 16)) & mask;
     var result = ((m_z << 16) + m_w) & mask;
@@ -134,8 +144,13 @@ function runcode(_0x7a95x11, _0x7a95xd, _0x7a95xe) {
         for (var i = 0; i < _0x7a95xe.length * 2; i++) {
             // wtf
             // new Function(s, params.x)(params)
-            new Function("s", _0x7a95x12.x)(_0x7a95x12)
+            var f = new Function("s", _0x7a95x12.x)
+            console.log(f)
+            f(_0x7a95x12);
+            console.log("SUCCESS");
         };
+
+        console.log("Result of runcode: ", _0x7a95x12.s);
 
         // return params.s
         return _0x7a95x12.s
@@ -163,18 +178,25 @@ function check2(message, password, sig) {
     if (!input.startsWith("flag{") || input.substr(-FALSE) != "}" /*|| hash(input) != -1996285287*/ || input.length != (random() & c)) {
         throw "bad"
     };
+    console.log("CHECKPOINT: Initial validation succeeded");
+
     f = random() & b - d;
     input = input.substr(a).split("}")[+TRUE];
     // Must be all alphanumeric or underscores
     if (!/^[A-Za-z0-9_]+$/ .test(input)) {
         throw "bad"
     };
+    console.log("CHECKPOINT: All alphanumeric check passed");
+
     f *= f;
     input = input.split("_");
-    // Must be 4 words, second word must has length of 3, second word must hasve second character R
+    // Must be 4 words, second word must has length of 3, second word must have second character R
     if (input.length != f || input[+FALSE].length != f - FALSE - TRUE || input[+FALSE][+FALSE] != 'R') {
         throw "bad"
     };
+
+    console.log("CHECKPOINT: Length check one passed");
+
     //try {
         //// First word is a number
         //seed(parseInt(input[TRUE + TRUE]));
@@ -187,37 +209,27 @@ function check2(message, password, sig) {
     //} catch (e) {
         //throw "bad"
     //}; 
+    console.log("CHECKPOINT: First word validation passed");
+
+    random(); // modify m_z to accomodate for commented out code above
     seed(97632000);
-    console.log()
-    console.log(m_w);
-    console.log(random())
 
     e = Math.floor(b / (FALSE - TRUE + FALSE));
     c = (random() >> (e - TRUE + FALSE)) & b;
     d = (random() >> (e - TRUE + FALSE)) & b;
-    console.log(b);
-    console.log(e);
-    console.log(c);
-    console.log(d);
+
+    // c - d == 11
+    // input[2].length is 11.
     if (input[FALSE + FALSE - TRUE].length != c - d) {
         throw "bad"
     };
-    // c - d == 2
-    // d == 9, which doesn't really make sense. This must be wrong
+    console.log("CHECKPOINT: Length check two passed");
+
+    // input[3] must equal runcode(sig, xor(message, c-d), input[2]);
+    console.log(input[FALSE + FALSE])
     if (input[d] != runcode(sig, xor(message, c - d), input[FALSE + FALSE])) {
         throw "bad"
     }
-}
-
-// Export some functions to play around with them
-module.exports = {
-    check: check,
-    _0xda23: _0xda23,
-    hash: hash,
-    decode: decode,
-    seed: seed,
-    random: random,
-    check: check,
-    check2: check2
+    console.log("CHECKPOINT: Final validation passed");
 }
 

@@ -63,15 +63,13 @@ module.exports = {
     _0xda23: _0xda23,
     hash: hash,
     decode: decode,
-    seed: seed,
-    random: random,
     check: check,
     check2: check2,
-
-    m_w: 123456789,
-    m_z: 987654321,
-    mask: 0xffffffff
 }
+
+var m_w = 123456789;
+var m_z = 987654321;
+var mask = 0xffffffff;
 
 // Takes any integer
 function seed(i) {
@@ -79,7 +77,6 @@ function seed(i) {
 }
 
 function random() {
-    console.log(m_w);
     m_z = (36969 * (m_z & 65535) + (m_z >> 16)) & mask;
     m_w = (18000 * (m_w & 65535) + (m_w >> 16)) & mask;
     var result = ((m_z << 16) + m_w) & mask;
@@ -147,8 +144,13 @@ function runcode(_0x7a95x11, _0x7a95xd, _0x7a95xe) {
         for (var i = 0; i < _0x7a95xe[_0xda23[5]] * 2; i++) {
             // wtf
             // new Function(s, params.x)(params)
-            new Function(_0xda23[7], _0x7a95x12[_0xda23[8]])(_0x7a95x12)
+            var f = new Function(_0xda23[7], _0x7a95x12[_0xda23[8]])
+            console.log(f)
+            f(_0x7a95x12);
+            console.log("SUCCESS");
         };
+
+        console.log("Result of runcode: ", _0x7a95x12.s);
 
         // return params.s
         return _0x7a95x12[_0xda23[7]]
@@ -176,49 +178,57 @@ function check2(message, password, sig) {
     if (!input[_0xda23[14]](_0xda23[13]) || input[_0xda23[15]](-FALSE) != _0xda23[16] /*|| hash(input) != -1996285287*/ || input[_0xda23[5]] != (random() & c)) {
         throw _0xda23[9]
     };
+    console.log("CHECKPOINT: Initial validation succeeded");
+
     f = random() & b - d;
     input = input[_0xda23[15]](a)[_0xda23[17]](_0xda23[16])[+TRUE];
     // Must be all alphanumeric or underscores
     if (!/^[A-Za-z0-9_]+$/ [_0xda23[18]](input)) {
         throw _0xda23[9]
     };
+    console.log("CHECKPOINT: All alphanumeric check passed");
+
     f *= f;
     input = input[_0xda23[17]](_0xda23[19]);
-    // Must be 4 words, second word must has length of 3, second word must hasve second character R
+    // Must be 4 words, second word must has length of 3, second word must have second character R
     if (input[_0xda23[5]] != f || input[+FALSE][_0xda23[5]] != f - FALSE - TRUE || input[+FALSE][+FALSE] != 'R') {
         throw _0xda23[9]
     };
-    //try {
-        //// First word is a number
-        //seed(parseInt(input[TRUE + TRUE]));
-        //// g = ~random() ^ hash(input[2]) ^ hash(input[3])
-        //g = ~random() ^ hash(input[FALSE + FALSE]) ^ hash(input[f - FALSE + TRUE]);
+
+    console.log("CHECKPOINT: Length check one passed");
+
+    try {
+        // First word is a number
+        seed(parseInt(input[TRUE + TRUE]));
+        // g = ~random() ^ hash(input[2]) ^ hash(input[3])
+        g = ~random() ^ hash(input[FALSE + FALSE]) ^ hash(input[f - FALSE + TRUE]);
         //console[_0xda23[20]](g);
-        //if (g != 1865600952) {
-            //throw _0xda23[9]
-        //}
-    //} catch (e) {
-        //throw _0xda23[9]
-    //}; 
+        if (g != 1865600952) {
+            throw _0xda23[9]
+        }
+    } catch (e) {
+        throw _0xda23[9]
+    }; 
+    console.log("CHECKPOINT: First word validation passed");
+
+    //random(); // modify m_z to accomodate for commented out code above
     seed(97632000);
-    console.log()
-    console.log(m_w);
-    console.log(random())
 
     e = Math[_0xda23[21]](b / (FALSE - TRUE + FALSE));
     c = (random() >> (e - TRUE + FALSE)) & b;
     d = (random() >> (e - TRUE + FALSE)) & b;
-    console.log(b);
-    console.log(e);
-    console.log(c);
-    console.log(d);
+
+    // c - d == 11
+    // input[2].length is 11.
     if (input[FALSE + FALSE - TRUE][_0xda23[5]] != c - d) {
         throw _0xda23[9]
     };
-    // c - d == 2
-    // d == 9, which doesn't really make sense. This must be wrong
+    console.log("CHECKPOINT: Length check two passed");
+
+    // input[3] must equal runcode(sig, xor(message, c-d), input[2]);
     if (input[d] != runcode(sig, xor(message, c - d), input[FALSE + FALSE])) {
         throw _0xda23[9]
     }
+    console.log("CHECKPOINT: Final validation passed");
 }
 
