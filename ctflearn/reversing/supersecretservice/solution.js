@@ -119,23 +119,45 @@ function solve_word_2() {
 // Code to solve for input[0]
 function solve_word_0() {
     var frag1 = "_0R0_";
+    var frag3 = "a3Bn9cQWv";
     var frag2 = "0BfuSc4t1on_"
-    var frag3 = "a3Bn9cQ|";
 
-    for (var i = 1000; i < 10000; i++) {
+    var candidates = [];
+
+    for (var i = 0; i < 10000; i++) {
         try {
-            var flag = "flag{" + i.toString() + frag1 + frag2 + frag3 + "}";
-            console.log(flag)
+            var num = i.toString().padStart(4, "0")
+            var flag = "flag{" + num + frag1 + frag2 + frag3 + "}";
             verify.check2(message, flag, sig);
-            console.log(flag)
-            return;
+            candidates.push(flag);
+            //return;
         } catch (e) {
             continue;
         }
     }
+    return candidates;
 }
 
-var code = "flag{0000_0R0_0BfuSc4t1on_a3Bn9cQWv}"
+function solve_word_1(candidates) {
+
+    var i1 = 10;
+    var i2 = 12;
+    for (let flag of candidates) {
+        for (let c1 of characters) {
+            for (let c2 of characters) {
+                var s = flag.substr(0, i1) + c1 + flag.substr(i1 + 1);
+                s = s.substr(0, i2) + c2 + s.substr(i2 + 1);
+                if (verify.hash(s) === -1996285287) {
+                    console.log(s);
+                    return;
+                }
+            }
+        }
+    }
+}
+
+var code = "flag{0631_0R0_0BfuSc4t1on_a3Bn9cQWv}"
 //solve_word_2()
-//solve_word_0()
-verify.check(message, code, sig);
+var c = solve_word_0()
+solve_word_1(c) // SOLVED!!!
+//verify.check(message, code, sig);

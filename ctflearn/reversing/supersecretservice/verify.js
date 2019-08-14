@@ -233,21 +233,21 @@ function check2(message, password, sig) {
 
     //console.log("CHECKPOINT: Length check one passed");
 
-    //try {
-        //// First word is a number
-        //seed(parseInt(input[TRUE + TRUE]));
-        //// g = ~random() ^ hash(input[2]) ^ hash(input[3])
-        //g = ~random() ^ hash(input[FALSE + FALSE]) ^ hash(input[f - FALSE + TRUE]);
-        ////console[_0xda23[20]](g);
-        //if (g != 1865600952) {
-            //throw _0xda23[9]
-        //}
-    //} catch (e) {
-        //throw _0xda23[9]
-    //}; 
+    try {
+        // First word is a number
+        seed(parseInt(input[TRUE + TRUE]));
+        // g = ~random() ^ hash(input[2]) ^ hash(input[3])
+        g = ~random() ^ hash(input[FALSE + FALSE]) ^ hash(input[f - FALSE + TRUE]);
+        //console[_0xda23[20]](g);
+        if (g != 1865600952) {
+            throw _0xda23[9]
+        }
+    } catch (e) {
+        throw _0xda23[9]
+    }; 
     //console.log("CHECKPOINT: First word validation passed");
 
-    random(); // modify m_z to accomodate for commented out code above
+    //random(); // modify m_z to accomodate for commented out code above
     seed(97632000);
 
     e = Math[_0xda23[21]](b / (FALSE - TRUE + FALSE));
@@ -263,11 +263,9 @@ function check2(message, password, sig) {
 
     // input[3] must equal runcode(sig, xor(message, c-d), input[2]);
     var result = runcode(sig, xor(message, c - d), input[FALSE + FALSE]);
-    //if (input[d] != result) {
-        //throw _0xda23[9]
-    //}
-    if (result == 0) throw bad
-    console.log(result)
+    if (input[d] != result) {
+        throw _0xda23[9]
+    }
     
     //console.log("CHECKPOINT: Final validation passed");
     return true;
