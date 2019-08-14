@@ -1,5 +1,6 @@
 node_modules
-package_lock.json
+package-lock.json
+deobfuscated.verify.js
 index.html
 index.css
 *.txt
