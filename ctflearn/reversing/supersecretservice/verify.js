@@ -1,4 +1,6 @@
+var esprima = require('esprima');
 // Modified with some comments and added some newlines to aid in readability
+global.atob = require("atob")
 
 msg = ["You fail!", "Seriously?", "Ha! Ha! You wish it was right!", "Correct! (jkjk its wrong lol)", "stap tryin! youll nvr git it right!", "<code>throw 'you tried'; //throwing something you can catch!</code>", "just give up!", "y0u n00b! R U just bru13 f0rc1ng?"]
 tries = 0;
@@ -16,6 +18,7 @@ function check(message, password, sig) {
         console.log("Correct! (Oh gosh! I guess you've done it...)");
         console.log("good");
     } catch (e) {
+        console.log(e)
         if (tries >= msg.length)
             tries = 0;
         //$("resp").innerHTML = msg[tries];
@@ -65,6 +68,9 @@ module.exports = {
     decode: decode,
     check: check,
     check2: check2,
+    runcode: runcode,
+    xor: xor,
+    last_decoding_idx: 0,
 }
 
 var m_w = 123456789;
@@ -74,6 +80,11 @@ var mask = 0xffffffff;
 // Takes any integer
 function seed(i) {
     m_w = i;
+}
+
+function reset_rng() {
+    m_z = 987654321;
+    m_w = 123456789;
 }
 
 function random() {
@@ -112,29 +123,52 @@ function xor2(_0x7a95x7, _0x7a95x8) {
 
 // Seems like a function to decode a message given an encoded message, key, and signature
 // decode(message, key, sig)
+// param1: message, xor'd with some number
+// param2: A string, part of the flag
+// param3: A number
 function decode(_0x7a95xd, _0x7a95xe, _0x7a95xf) {
-    // x = param3 % 2
-    // y = param2.charCodeAt(param3 - x) / 2
+    // x = param3 % 2 == 0
+    // y = param2.charCodeAt((param3 - x) / 2)
     x = _0x7a95xf % 2;
     y = _0x7a95xe[_0xda23[0]]((_0x7a95xf - x) / 2);
+    //console.log("Index used for decoding: " + (_0x7a95xf - x) / 2)
+    module.exports.last_decoding_idx = (_0x7a95xf - x) / 2;
     if (!x) {
         y >>= 4
     };
     y &= 0xf;
 
     // return xor(param1, y)
+    // if x == 0, y will be 0
     return xor(_0x7a95xd, y)
 }
 
+function isValidJs(testString) {
+    var isValid = true;
+    try {
+        esprima.parse(testString);
+    }
+    catch(e) {
+        isValid = false;
+    }
+    return isValid;
+}
+
+/**
+ * param1: signature
+ * param2: message, xor'd with some number
+ * param3: A string, part of the password
+ */
 function runcode(_0x7a95x11, _0x7a95xd, _0x7a95xe) {
     // decode(param2, param3, 0);
     _0x7a95xd = decode(_0x7a95xd, _0x7a95xe, 0);
+    var success_count = 0;
     try {
         // params
         var _0x7a95x12 = {
-            x: _0x7a95xd, // param1, the signature
+            x: _0x7a95xd, // result of the first call to decode
             d: decode, // decode function
-            k: _0x7a95xe, // param3, key I think
+            k: _0x7a95xe, // param3, some word, part of the password
             o: xor2, // xor2 function
             s: _0x7a95x11 // param1, idk what this is
         };
@@ -142,26 +176,28 @@ function runcode(_0x7a95x11, _0x7a95xd, _0x7a95xe) {
 
         // for (var i = 0; i < param3.length * 2; i++)
         for (var i = 0; i < _0x7a95xe[_0xda23[5]] * 2; i++) {
-            // wtf
+            //console.log(_0x7a95x12.x)
+            if(isValidJs(_0x7a95x12.x)) {
+                success_count++;
+                //console.log(_0x7a95x12.x)
+            }
             // new Function(s, params.x)(params)
-            var f = new Function(_0xda23[7], _0x7a95x12[_0xda23[8]])
-            console.log(f)
-            f(_0x7a95x12);
-            console.log("SUCCESS");
+            new Function(_0xda23[7], _0x7a95x12[_0xda23[8]])(_0x7a95x12);
         };
-
-        console.log("Result of runcode: ", _0x7a95x12.s);
 
         // return params.s
         return _0x7a95x12[_0xda23[7]]
     } catch (e) {
+        //console.log(e)
         // ...ok?
         // throw bad
-        throw _0xda23[9]
+        //throw _0xda23[9]
+        return success_count;
     }
 }
 
 function check2(message, password, sig) {
+    reset_rng();
     seed(18458);
     j++;
     input = password;
@@ -178,7 +214,7 @@ function check2(message, password, sig) {
     if (!input[_0xda23[14]](_0xda23[13]) || input[_0xda23[15]](-FALSE) != _0xda23[16] /*|| hash(input) != -1996285287*/ || input[_0xda23[5]] != (random() & c)) {
         throw _0xda23[9]
     };
-    console.log("CHECKPOINT: Initial validation succeeded");
+    //console.log("CHECKPOINT: Initial validation succeeded");
 
     f = random() & b - d;
     input = input[_0xda23[15]](a)[_0xda23[17]](_0xda23[16])[+TRUE];
@@ -186,7 +222,7 @@ function check2(message, password, sig) {
     if (!/^[A-Za-z0-9_]+$/ [_0xda23[18]](input)) {
         throw _0xda23[9]
     };
-    console.log("CHECKPOINT: All alphanumeric check passed");
+    //console.log("CHECKPOINT: All alphanumeric check passed");
 
     f *= f;
     input = input[_0xda23[17]](_0xda23[19]);
@@ -195,23 +231,23 @@ function check2(message, password, sig) {
         throw _0xda23[9]
     };
 
-    console.log("CHECKPOINT: Length check one passed");
+    //console.log("CHECKPOINT: Length check one passed");
 
-    try {
-        // First word is a number
-        seed(parseInt(input[TRUE + TRUE]));
-        // g = ~random() ^ hash(input[2]) ^ hash(input[3])
-        g = ~random() ^ hash(input[FALSE + FALSE]) ^ hash(input[f - FALSE + TRUE]);
-        //console[_0xda23[20]](g);
-        if (g != 1865600952) {
-            throw _0xda23[9]
-        }
-    } catch (e) {
-        throw _0xda23[9]
-    }; 
-    console.log("CHECKPOINT: First word validation passed");
+    //try {
+        //// First word is a number
+        //seed(parseInt(input[TRUE + TRUE]));
+        //// g = ~random() ^ hash(input[2]) ^ hash(input[3])
+        //g = ~random() ^ hash(input[FALSE + FALSE]) ^ hash(input[f - FALSE + TRUE]);
+        ////console[_0xda23[20]](g);
+        //if (g != 1865600952) {
+            //throw _0xda23[9]
+        //}
+    //} catch (e) {
+        //throw _0xda23[9]
+    //}; 
+    //console.log("CHECKPOINT: First word validation passed");
 
-    //random(); // modify m_z to accomodate for commented out code above
+    random(); // modify m_z to accomodate for commented out code above
     seed(97632000);
 
     e = Math[_0xda23[21]](b / (FALSE - TRUE + FALSE));
@@ -223,12 +259,17 @@ function check2(message, password, sig) {
     if (input[FALSE + FALSE - TRUE][_0xda23[5]] != c - d) {
         throw _0xda23[9]
     };
-    console.log("CHECKPOINT: Length check two passed");
+    //console.log("CHECKPOINT: Length check two passed");
 
     // input[3] must equal runcode(sig, xor(message, c-d), input[2]);
-    if (input[d] != runcode(sig, xor(message, c - d), input[FALSE + FALSE])) {
-        throw _0xda23[9]
-    }
-    console.log("CHECKPOINT: Final validation passed");
+    var result = runcode(sig, xor(message, c - d), input[FALSE + FALSE]);
+    //if (input[d] != result) {
+        //throw _0xda23[9]
+    //}
+    if (result == 0) throw bad
+    console.log(result)
+    
+    //console.log("CHECKPOINT: Final validation passed");
+    return true;
 }
 
